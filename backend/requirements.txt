@@ -3,8 +3,9 @@ Django
 django-cors-headers
 djangorestframework
 djangorestframework-simplejwt
+dj-database-url
 PyJWT
 pytz
 sqlparse
 psycopg2-binary
-python-dotenvclea
+python-dotenv
