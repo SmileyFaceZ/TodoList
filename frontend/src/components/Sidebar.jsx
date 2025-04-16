@@ -17,9 +17,9 @@ const Sidebar = () => {
         </div>
 
         <nav className="flex-1 space-y-4">
-          <NavItem icon={<FiHome />} text="Dashboard" active />
-          <NavItem icon={<FiList />} text="My Task" />
-          <NavItem icon={<FiLogOut />} text="Logout" />
+          <NavItem icon={<FiHome />} text="Dashboard" route="/" active />
+          <NavItem icon={<FiList />} text="My Task" route="/" />
+          <NavItem icon={<FiLogOut />} text="Logout" route="/logout" />
         </nav>
       </aside>
     </div>

@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiUser, FiLock } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth";
+import SpinnerLoading from "../../components/SpinnerLoading";
 
-const SignInPage = () => {
+const SignInPage = ({ route, method }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
+
+  const { login, isAuthorized } = useAuth();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const success = await login({ username, password });
+
+      if (success) {
+        navigate("/", { replace: true });
+      } else {
+        setError("Login failed. Please check your username and password.");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-red-400 via-pink-400 to-purple-400 p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl flex overflow-hidden">
@@ -16,13 +48,23 @@ const SignInPage = () => {
         <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-gray-800 mb-6">Sign In</h2>
 
-          <div className="space-y-4">
+          {error && (
+            <div className="mb-4 text-red-500 text-sm font-medium text-center">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="relative">
               <FiUser className="absolute left-3 top-3.5 text-gray-500" />
               <input
-                type="text"
-                placeholder="Enter Username"
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter Username"
+                required
               />
             </div>
 
@@ -30,23 +72,28 @@ const SignInPage = () => {
               <FiLock className="absolute left-3 top-3.5 text-gray-500" />
               <input
                 type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+                required
               />
             </div>
 
-            <div className="flex items-center justify-between text-sm text-gray-600">
-              <label className="flex items-center space-x-2">
-                <input type="checkbox" className="form-checkbox" />
-                <span>Remember Me</span>
-              </label>
-              <a href="#" className="text-red-500 hover:underline">
-                Forgot Password?
-              </a>
-            </div>
-
-            <button className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition">
-              Login
+            <button
+              className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="flex justify-center items-center gap-2">
+                  <SpinnerLoading />
+                  Logging in...
+                </div>
+              ) : (
+                "Log in"
+              )}
             </button>
 
             <div className="text-center text-gray-500 text-sm mt-4">
@@ -71,7 +118,7 @@ const SignInPage = () => {
                 Create One
               </a>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
