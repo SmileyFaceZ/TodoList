@@ -1,8 +1,12 @@
 import React from "react";
 import { FiHome, FiList, FiLogOut } from "react-icons/fi";
 import NavItem from "./NavItem";
+import useUser from "../hooks/useUser";
+import { Skeleton } from "./ui/skeleton";
 
 const Sidebar = () => {
+  const { username, email, loading } = useUser();
+
   return (
     <div className="min-h-screen flex bg-gray-50 text-gray-800">
       <aside className="w-64 bg-white shadow-md p-4 flex flex-col">
@@ -12,8 +16,16 @@ const Sidebar = () => {
             alt="User"
             className="w-16 h-16 rounded-full mb-2"
           />
-          <h2 className="text-lg font-semibold">Sundar Gurung</h2>
-          <p className="text-sm text-gray-500">sundargurung360@gmail.com</p>
+          {loading ? (
+            <div>
+              <Skeleton className="w-40 h-8 mt-2 mb-2" />
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-lg text-center font-semibold">{username}</h2>
+              <p className="text-sm text-gray-500">{email}</p>
+            </div>
+          )}
         </div>
 
         <nav className="flex-1 space-y-4">

@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer
+from .serializers import UserSerializer, TodoSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from allauth.socialaccount.models import SocialToken, SocialAccount
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 import json
+from .models import Todo
 
 
 User = get_user_model()

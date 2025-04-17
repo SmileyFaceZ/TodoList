@@ -1,11 +1,23 @@
+import useUser from "@/hooks/useUser";
+import { Skeleton } from "@/components/ui/skeleton";
+
 const Dashboard = () => {
+  const { username, email, loading } = useUser();
+
   return (
     <div className="min-h-screen flex bg-gray-50 text-gray-800">
       <main className="flex-1 p-6 space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold">Welcome back, Sundar 👋</h1>
-            <p className="text-sm text-gray-500">Monday • 14/04/2025</p>
+            {loading ? (
+              <div>
+                <Skeleton className="w-80 h-7 mt-2" />
+              </div>
+            ) : (
+              <h1 className="text-2xl font-bold">
+                Welcome back, {username} 👋
+              </h1>
+            )}
           </div>
         </div>
 

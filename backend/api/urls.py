@@ -18,4 +18,7 @@ urlpatterns = [
 
     # Google login
     path('google/validate_token/', validate_google_token, name='validate_token'),
+
+    # Load user data
+    path('user/', UserDetailView.as_view(), name='user_detail'),
 ]
