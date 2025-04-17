@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Todo, Category
+from .models import Todo, Category, Priority
 
 
 User = get_user_model()
@@ -28,9 +28,16 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
+class PrioritySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Priority
+        fields = ['id', 'name']
+
+
 class TodoSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
-    
+    priority = PrioritySerializer(read_only=True)
+
     class Meta:
         model = Todo
         fields = '__all__'
