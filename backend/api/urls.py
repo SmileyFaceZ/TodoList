@@ -1,5 +1,5 @@
 from django.urls import path, include
-from api.views import UserCreate, UserDetailView
+from api.views import UserCreate, UserDetailView, TodoListView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -19,6 +19,7 @@ urlpatterns = [
     # Google login
     path('google/validate_token/', validate_google_token, name='validate_token'),
 
-    # Load user data
+    # Load TODOs
+    path('todos/', TodoListView.as_view(), name='todo_list'),
     path('user/', UserDetailView.as_view(), name='user_detail'),
 ]

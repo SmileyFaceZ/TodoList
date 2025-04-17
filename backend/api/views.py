@@ -29,6 +29,14 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         return self.request.user
 
 
+class TodoListView(generics.ListCreateAPIView):
+    serializer_class = TodoSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Todo.objects.filter(user=self.request.user)
+
+
 @login_required
 def google_login_callback(request):
     user = request.user

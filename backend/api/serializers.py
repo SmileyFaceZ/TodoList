@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Todo
+from .models import Todo, Category
 
 
 User = get_user_model()
@@ -22,7 +22,15 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
+
 class TodoSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True)
+    
     class Meta:
         model = Todo
         fields = '__all__'
