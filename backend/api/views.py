@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, TodoSerializer
+from .serializers import UserSerializer, TodoSerializer, PrioritySerializer, CategorySerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from allauth.socialaccount.models import SocialToken, SocialAccount
 from django.contrib.auth.decorators import login_required
@@ -9,7 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 import json
-from .models import Todo
+from .models import Todo, Priority, Category
 
 
 User = get_user_model()
@@ -34,8 +34,27 @@ class TodoListView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Todo.objects.filter(user=self.request.user)
+        return Todo.objects.filter(user=self.request.user).order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        return super().perform_create(serializer)
 
+
+
+class PriorityListView(generics.ListCreateAPIView):
+    serializer_class = PrioritySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Priority.objects.filter(user=self.request.user)
+
+
+class CategoryListView(generics.ListCreateAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Category.objects.filter(user=self.request.user)
 
 @login_required
 def google_login_callback(request):

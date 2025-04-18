@@ -8,7 +8,6 @@ import { useAuth } from "./auth";
 import { Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import { AuthProvider } from "./auth";
-import TaskForm from "./components/TaskForm";
 
 
 function App() {
@@ -33,7 +32,6 @@ function App() {
       <Route path="/login/callback" element={<RedirectGoogleAuth />} />
       <Route path="/signin" element={<ProtectedLogin />} />
       <Route path="/signup" element={<ProtectedRegister />} />
-      <Route path="/task" element={<TaskForm />} />
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
       </Route>

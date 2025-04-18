@@ -2,8 +2,6 @@ import useUser from "@/hooks/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/api";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { FiPlus } from "react-icons/fi";
 import TaskForm from "@/components/TaskForm";
 
 const formatDate = (dateString) => {
@@ -32,7 +30,6 @@ const Dashboard = () => {
           throw new Error("Failed to fetch todos");
         }
         setTodoList(response.data);
-        console.log(response.data);
       } catch (err) {
         alert("Error fetching todos");
       } finally {
@@ -56,8 +53,10 @@ const Dashboard = () => {
               </h1>
             )}
           </div>
-          
-          <TaskForm />
+
+          <TaskForm
+            onTaskAdded={(newTask) => setTodoList((prev) => [newTask, ...prev])}
+          />
         </div>
 
         {dashboardLoading ? (
@@ -74,9 +73,13 @@ const Dashboard = () => {
                 className="bg-white hover:shadow-lg transition-shadow duration-200 rounded-xl shadow-md p-6 border border-gray-100"
               >
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-xl font-semibold mb-1">{todo.title}</h2>
-                    <p className="text-sm text-gray-600">{todo.description}</p>
+                  <div className="w-full">
+                    <h2 className="text-xl font-semibold mb-1 break-words">
+                      {todo.title}
+                    </h2>
+                    <p className="text-sm text-gray-600 break-words">
+                      {todo.description}
+                    </p>
                   </div>
                 </div>
 
