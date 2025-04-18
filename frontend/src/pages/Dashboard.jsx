@@ -2,6 +2,9 @@ import useUser from "@/hooks/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/api";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { FiPlus } from "react-icons/fi";
+import TaskForm from "@/components/TaskForm";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -44,11 +47,17 @@ const Dashboard = () => {
     <div className="min-h-screen flex bg-gray-50 text-gray-800">
       <main className="flex-1 p-6 space-y-6">
         <div className="flex justify-between items-center">
-          {loading ? (
-            <Skeleton className="w-80 h-7 mt-2" />
-          ) : (
-            <h1 className="text-2xl font-bold">Welcome back, {username} 👋</h1>
-          )}
+          <div>
+            {loading ? (
+              <Skeleton className="w-80 h-7 mt-2" />
+            ) : (
+              <h1 className="text-2xl font-bold">
+                Welcome back, {username} 👋
+              </h1>
+            )}
+          </div>
+          
+          <TaskForm />
         </div>
 
         {dashboardLoading ? (

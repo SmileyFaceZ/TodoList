@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../auth";
 import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 const NavItem = ({ icon, text, route, active = false }) => {
   const navigate = useNavigate();
