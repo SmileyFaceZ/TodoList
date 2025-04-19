@@ -1,0 +1,34 @@
+.
+├── README.md
+├── app_view
+│   ├── dashboard.png
+│   ├── notfound.png
+│   ├── signin.png
+│   ├── signup.png
+│   └── task-setting.png
+├── backend
+│   ├── api
+│   ├── backend
+│   ├── manage.py
+│   └── requirements.txt
+├── frontend
+│   ├── README.md
+│   ├── components.json
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── jsconfig.json
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   ├── src
+│   ├── tailwind.config.js
+│   └── vite.config.js
+├── structure.txt
+└── venv
+    ├── bin
+    ├── include
+    ├── lib
+    └── pyvenv.cfg
+
+12 directories, 20 files
