@@ -43,12 +43,23 @@ const Sidebar = () => {
             route="/task-setting"
             active={location.pathname.startsWith("/task-setting")}
           />
-          <NavItem
-            icon={<FiLogOut />}
-            text="Logout"
-            route="/logout"
-            active={location.pathname === "/logout"}
-          />
+          {loading ? (
+            <Skeleton className="w-40 h-6" />
+          ) : username ? (
+            <NavItem
+              icon={<FiLogOut />}
+              text="Logout"
+              route="/logout"
+              active={location.pathname === "/logout"}
+            />
+          ) : (
+            <NavItem
+              icon={<FiLogOut />}
+              text="Sign In"
+              route="/signin"
+              active={location.pathname === "/signin"}
+            />
+          )}
         </nav>
       </aside>
     </div>

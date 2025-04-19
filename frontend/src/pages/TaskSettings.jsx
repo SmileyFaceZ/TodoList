@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import api from "@/api";
 import { FiEdit2, FiTrash2, FiPlus } from "react-icons/fi";
+import useUser from "@/hooks/useUser";
 
 export default function TaskSettings() {
   const [categories, setCategories] = useState([]);
@@ -18,6 +19,7 @@ export default function TaskSettings() {
   const [formValue, setFormValue] = useState("");
   const [formColor, setFormColor] = useState("#a3a3a3");
   const [editId, setEditId] = useState(null);
+  const { username, loading } = useUser();
 
   const fetchData = async () => {
     const [catRes, priRes] = await Promise.all([
@@ -31,6 +33,24 @@ export default function TaskSettings() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  if (!loading && !username) {
+    return (
+      <div className="max-w-xl mx-auto mt-20 p-6 bg-white rounded-md shadow text-center">
+        <h2 className="text-xl font-semibold mb-4">
+          Please sign in to access Task Settings.
+        </h2>
+        <Button
+          className="bg-gradient-to-r from-red-400 via-pink-400 to-purple-400 
+             bg-[length:200%_100%] bg-left hover:bg-right
+             transition-all duration-500 ease-in-out text-white"
+          onClick={() => (window.location.href = "/signin")}
+        >
+          Go to Sign In
+        </Button>
+      </div>
+    );
+  }
 
   const handleSubmit = async () => {
     try {
@@ -197,10 +217,7 @@ export default function TaskSettings() {
             {modalType && (
               <div className="space-y-2 w-full">
                 <div className="w-full flex justify-center items-center">
-                  <HexColorPicker
-                    color={formColor}
-                    onChange={setFormColor}
-                  />
+                  <HexColorPicker color={formColor} onChange={setFormColor} />
                 </div>
 
                 <div

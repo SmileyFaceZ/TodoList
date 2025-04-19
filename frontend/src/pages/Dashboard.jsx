@@ -1,7 +1,7 @@
 import useUser from "@/hooks/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import TaskForm from "@/components/TaskForm";
 import TodoModal from "@/components/TodoModal";
 
@@ -17,8 +17,6 @@ const formatDate = (dateString) => {
     hour12: false,
   });
 };
-
-
 
 const Dashboard = () => {
   const { username, email, loading } = useUser();
@@ -48,14 +46,19 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchTodos = async () => {
+      console.log("username", username);
+      if (username === null) {
+        return;
+      }
       try {
         const response = await api.get("api/todos/");
-        if (response.status !== 200) {
-          throw new Error("Failed to fetch todos");
+        if (response.status === 401) {
+          return;
         }
+
         setTodoList(response.data);
       } catch (err) {
-        alert("Error fetching todos");
+        // alert("Error fetching todos");
       } finally {
         setDashboardLoading(false);
       }
@@ -67,20 +70,28 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex bg-gray-50 text-gray-800">
       <main className="flex-1 p-6 space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            {loading ? (
-              <Skeleton className="w-80 h-7 mt-2" />
-            ) : (
+        <div>
+          {loading ? (
+            <Skeleton className="w-80 h-7 mt-2" />
+          ) : !username ? (
+            <main className="flex-1 p-6 flex items-center justify-center">
+              <h2 className="text-xl font-semibold text-gray-600">
+                🚫 Please login before using the dashboard.
+              </h2>
+            </main>
+          ) : (
+            <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold">
                 Welcome back, {username} 👋
               </h1>
-            )}
-          </div>
 
-          <TaskForm
-            onTaskAdded={(newTask) => setTodoList((prev) => [newTask, ...prev])}
-          />
+              <TaskForm
+                onTaskAdded={(newTask) =>
+                  setTodoList((prev) => [newTask, ...prev])
+                }
+              />
+            </div>
+          )}
         </div>
 
         {dashboardLoading ? (
