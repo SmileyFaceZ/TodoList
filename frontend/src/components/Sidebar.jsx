@@ -1,11 +1,13 @@
 import React from "react";
 import { FiHome, FiList, FiLogOut } from "react-icons/fi";
+import { useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
 import useUser from "../hooks/useUser";
 import { Skeleton } from "./ui/skeleton";
 
 const Sidebar = () => {
   const { username, email, loading } = useUser();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen flex bg-gray-50 text-gray-800">
@@ -29,9 +31,24 @@ const Sidebar = () => {
         </div>
 
         <nav className="flex-1 space-y-4">
-          <NavItem icon={<FiHome />} text="Dashboard" route="/" active />
-          <NavItem icon={<FiList />} text="Task Setting" route="/task-setting" />
-          <NavItem icon={<FiLogOut />} text="Logout" route="/logout" />
+          <NavItem
+            icon={<FiHome />}
+            text="Dashboard"
+            route="/"
+            active={location.pathname === "/"}
+          />
+          <NavItem
+            icon={<FiList />}
+            text="Task Setting"
+            route="/task-setting"
+            active={location.pathname.startsWith("/task-setting")}
+          />
+          <NavItem
+            icon={<FiLogOut />}
+            text="Logout"
+            route="/logout"
+            active={location.pathname === "/logout"}
+          />
         </nav>
       </aside>
     </div>
