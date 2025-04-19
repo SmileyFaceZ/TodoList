@@ -195,8 +195,14 @@ export default function TaskSettings() {
             />
             {/* Color picker for both categories and priorities */}
             {modalType && (
-              <div className="space-y-2">
-                <HexColorPicker color={formColor} onChange={setFormColor} />
+              <div className="space-y-2 w-full">
+                <div className="w-full flex justify-center items-center">
+                  <HexColorPicker
+                    color={formColor}
+                    onChange={setFormColor}
+                  />
+                </div>
+
                 <div
                   className="h-8 w-full rounded-md border"
                   style={{ backgroundColor: formColor }}

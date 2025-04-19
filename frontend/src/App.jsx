@@ -3,7 +3,6 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./components/Layout";
 import "./index.css";
-import RedirectGoogleAuth from "./components/GoogleRedirectHandle";
 import { useAuth } from "./auth";
 import { Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
@@ -29,7 +28,6 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/login/callback" element={<RedirectGoogleAuth />} />
       <Route path="/signin" element={<ProtectedLogin />} />
       <Route path="/signup" element={<ProtectedRegister />} />
       <Route path="/" element={<Layout />}>

@@ -96,22 +96,6 @@ const SignInPage = ({ route, method }) => {
               )}
             </button>
 
-            <div className="text-center text-gray-500 text-sm mt-4">
-              Or, login with
-              <div className="flex justify-center gap-4 mt-2">
-                <div
-                  className="w-10 h-10 bg-white rounded-full border border-gray-300 flex justify-center items-center cursor-pointer shadow-lg hover:shadow-2xl transition"
-                  title="Google"
-                >
-                  <img
-                    src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-                    alt="Google Logo"
-                    className="w-6 h-6"
-                  />
-                </div>
-              </div>
-            </div>
-
             <div className="text-center mt-6 text-sm text-gray-700">
               Don't have an account?{" "}
               <a href="/signup" className="text-red-500 hover:underline">
