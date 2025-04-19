@@ -38,7 +38,15 @@ class TodoListView(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         return super().perform_create(serializer)
+    
 
+class TodoDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Todo.objects.filter(user=self.request.user)
 
 
 class PriorityListView(generics.ListCreateAPIView):

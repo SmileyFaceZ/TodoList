@@ -22,16 +22,32 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['id', 'name', 'color']
-
-
 class PrioritySerializer(serializers.ModelSerializer):
     class Meta:
         model = Priority
-        fields = ['id', 'name', 'color']
+        fields = '__all__'
+
+    def create(self, validated_data):
+        try:
+            user = self.context['request'].user
+            priority = Priority.objects.create(user=user, **validated_data)
+            return priority
+        except Exception as e:
+            raise serializers.ValidationError(f"An error occurred: {str(e)}")
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+    def create(self, validated_data):
+        try:
+            user = self.context['request'].user
+            category = Category.objects.create(user=user, **validated_data)
+            return category
+        except Exception as e:
+            raise serializers.ValidationError(f"An error occurred: {str(e)}")
 
 
 class TodoSerializer(serializers.ModelSerializer):
@@ -74,15 +90,3 @@ class TodoSerializer(serializers.ModelSerializer):
         if value.user != self.context['request'].user:
             raise serializers.ValidationError("Invalid category.")
         return value
-
-
-class PrioritySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Priority
-        fields = '__all__'
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'

@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/api";
 import { useState, useEffect } from "react";
 import TaskForm from "@/components/TaskForm";
+import TodoModal from "@/components/TodoModal";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -17,10 +18,33 @@ const formatDate = (dateString) => {
   });
 };
 
+
+
 const Dashboard = () => {
   const { username, email, loading } = useUser();
   const [todoList, setTodoList] = useState([]);
   const [dashboardLoading, setDashboardLoading] = useState(true);
+
+  const [allPriorities, setAllPriorities] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+
+  const [selectedTodo, setSelectedTodo] = useState(null);
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const [priRes, catRes] = await Promise.all([
+          api.get("/api/priorities/"),
+          api.get("/api/categories/"),
+        ]);
+        setAllPriorities(priRes.data);
+        setAllCategories(catRes.data);
+      } catch (err) {
+        console.error("Failed to fetch options", err);
+      }
+    };
+    fetchOptions();
+  }, []);
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -67,72 +91,73 @@ const Dashboard = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {todoList.map(
-              (todo) => (
-                (
-                  <div
-                    key={todo.id}
-                    className="bg-white hover:shadow-lg transition-shadow duration-200 rounded-xl shadow-md p-6 border border-gray-100"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="w-full">
-                        <h2 className="text-xl font-semibold mb-1 break-words">
-                          {todo.title}
-                        </h2>
-                        <p className="text-sm text-gray-600 break-words">
-                          {todo.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-500">
-                          Priority:
-                        </span>
-                        <span
-                          className="text-white px-2 py-0.5 rounded text-xs"
-                          style={{
-                            backgroundColor: todo.priority?.color || "#808080",
-                          }}
-                        >
-                          {todo.priority?.name || "N/A"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-500">
-                          Category:
-                        </span>
-                        <span
-                          className="text-white px-2 py-0.5 rounded text-xs"
-                          style={{
-                            backgroundColor: todo.category?.color || "#808080",
-                          }}
-                        >
-                          {todo.category?.name || "N/A"}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-500">
-                          Created:
-                        </span>
-                        <span>{formatDate(todo.created_at)}</span>
-                      </div>
-
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-500">
-                          Updated:
-                        </span>
-                        <span>{formatDate(todo.updated_at)}</span>
-                      </div>
-                    </div>
+            {todoList.map((todo) => (
+              <div
+                key={todo.id}
+                className="bg-white hover:shadow-lg transition-shadow duration-200 rounded-xl shadow-md p-6 border border-gray-100 cursor-pointer"
+                onClick={() => setSelectedTodo(todo)}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="w-full">
+                    <h2 className="text-xl font-semibold mb-1 break-words">
+                      {todo.title}
+                    </h2>
+                    <p className="text-sm text-gray-600 break-words">
+                      {todo.description}
+                    </p>
                   </div>
-                )
-              )
-            )}
+                </div>
+
+                <div className="mt-4 space-y-1 text-sm">
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-500">Priority:</span>
+                    <span
+                      className="text-white px-2 py-0.5 rounded text-xs"
+                      style={{
+                        backgroundColor: todo.priority?.color || "#808080",
+                      }}
+                    >
+                      {todo.priority?.name || "None"}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-500">Category:</span>
+                    <span
+                      className="text-white px-2 py-0.5 rounded text-xs"
+                      style={{
+                        backgroundColor: todo.category?.color || "#808080",
+                      }}
+                    >
+                      {todo.category?.name || "None"}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-500">Created:</span>
+                    <span>{formatDate(todo.created_at)}</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-500">Updated:</span>
+                    <span>{formatDate(todo.updated_at)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
+        )}
+
+        {/* Render Modal */}
+        {selectedTodo && (
+          <TodoModal
+            todo={selectedTodo}
+            onClose={() => setSelectedTodo(null)}
+            allPriorities={allPriorities}
+            allCategories={allCategories}
+            formatDate={formatDate}
+            setTodoList={setTodoList}
+          />
         )}
       </main>
     </div>

@@ -42,6 +42,7 @@ export default function TaskSettings() {
       if (editId) {
         await api.put(`/api/${modalType}/${editId}/`, payload);
       } else {
+        console.log("Creating:", modalType, payload);
         if (modalType === "category") {
           await api.post(`/api/categories/`, payload);
         } else {
