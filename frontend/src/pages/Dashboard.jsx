@@ -1,37 +1,164 @@
+import useUser from "@/hooks/useUser";
+import { Skeleton } from "@/components/ui/skeleton";
+import api from "@/api";
+import { useState, useEffect } from "react";
+import TaskForm from "@/components/TaskForm";
+import TodoModal from "@/components/TodoModal";
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+};
+
+
+
 const Dashboard = () => {
+  const { username, email, loading } = useUser();
+  const [todoList, setTodoList] = useState([]);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+
+  const [allPriorities, setAllPriorities] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
+
+  const [selectedTodo, setSelectedTodo] = useState(null);
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const [priRes, catRes] = await Promise.all([
+          api.get("/api/priorities/"),
+          api.get("/api/categories/"),
+        ]);
+        setAllPriorities(priRes.data);
+        setAllCategories(catRes.data);
+      } catch (err) {
+        console.error("Failed to fetch options", err);
+      }
+    };
+    fetchOptions();
+  }, []);
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const response = await api.get("api/todos/");
+        if (response.status !== 200) {
+          throw new Error("Failed to fetch todos");
+        }
+        setTodoList(response.data);
+      } catch (err) {
+        alert("Error fetching todos");
+      } finally {
+        setDashboardLoading(false);
+      }
+    };
+
+    fetchTodos();
+  }, []);
+
   return (
     <div className="min-h-screen flex bg-gray-50 text-gray-800">
       <main className="flex-1 p-6 space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold">Welcome back, Sundar 👋</h1>
-            <p className="text-sm text-gray-500">Monday • 14/04/2025</p>
+            {loading ? (
+              <Skeleton className="w-80 h-7 mt-2" />
+            ) : (
+              <h1 className="text-2xl font-bold">
+                Welcome back, {username} 👋
+              </h1>
+            )}
           </div>
+
+          <TaskForm
+            onTaskAdded={(newTask) => setTodoList((prev) => [newTask, ...prev])}
+          />
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <h2 className="text-xl font-semibold">
-                Attend Nischal's Birthday Party
-              </h2>
-              <p className="text-sm text-gray-500">
-                Buy gifts and pick up cake. (6 PM | Fresh Elements)
-              </p>
-            </div>
+        {dashboardLoading ? (
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-24 w-full rounded-lg" />
+            ))}
           </div>
-          <div className="mt-4 flex justify-between text-sm text-gray-600">
-            <div>
-              <span className="font-medium">Priority:</span>{" "}
-              <span className="text-yellow-600">Moderate</span>
-            </div>
-            <div>
-              <span className="font-medium">Status:</span>{" "}
-              <span className="text-red-500">Not Started</span>
-            </div>
-            <div>Created on: 14/04/2025</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {todoList.map((todo) => (
+              <div
+                key={todo.id}
+                className="bg-white hover:shadow-lg transition-shadow duration-200 rounded-xl shadow-md p-6 border border-gray-100 cursor-pointer"
+                onClick={() => setSelectedTodo(todo)}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="w-full">
+                    <h2 className="text-xl font-semibold mb-1 break-words">
+                      {todo.title}
+                    </h2>
+                    <p className="text-sm text-gray-600 break-words">
+                      {todo.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 space-y-1 text-sm">
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-500">Priority:</span>
+                    <span
+                      className="text-white px-2 py-0.5 rounded text-xs"
+                      style={{
+                        backgroundColor: todo.priority?.color || "#808080",
+                      }}
+                    >
+                      {todo.priority?.name || "None"}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-500">Category:</span>
+                    <span
+                      className="text-white px-2 py-0.5 rounded text-xs"
+                      style={{
+                        backgroundColor: todo.category?.color || "#808080",
+                      }}
+                    >
+                      {todo.category?.name || "None"}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-500">Created:</span>
+                    <span>{formatDate(todo.created_at)}</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-500">Updated:</span>
+                    <span>{formatDate(todo.updated_at)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+        )}
+
+        {/* Render Modal */}
+        {selectedTodo && (
+          <TodoModal
+            todo={selectedTodo}
+            onClose={() => setSelectedTodo(null)}
+            allPriorities={allPriorities}
+            allCategories={allCategories}
+            formatDate={formatDate}
+            setTodoList={setTodoList}
+          />
+        )}
       </main>
     </div>
   );
