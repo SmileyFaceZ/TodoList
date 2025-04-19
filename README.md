@@ -216,7 +216,7 @@ To get neon database url follow these steps.
 Create a `.env` file inside the `frontend/` directory:
 
 ```env
-# frontend/.env
+# frontend/.env.local
 
 VITE_API_URL="http://localhost:8000"
 ```
