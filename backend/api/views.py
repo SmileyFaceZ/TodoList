@@ -47,9 +47,31 @@ class PriorityListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Priority.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        return super().perform_create(serializer)
+    
+
+class PriorityDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = PrioritySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Priority.objects.filter(user=self.request.user)
 
 
 class CategoryListView(generics.ListCreateAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Category.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        return super().perform_create(serializer)
+    
+
+class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
 

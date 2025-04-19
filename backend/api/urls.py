@@ -1,5 +1,5 @@
 from django.urls import path, include
-from api.views import UserCreate, UserDetailView, TodoListView, PriorityListView, CategoryListView
+from api.views import UserCreate, UserDetailView, TodoListView, PriorityListView, CategoryListView, PriorityDetailView, CategoryDetailView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -23,5 +23,7 @@ urlpatterns = [
     path('todos/', TodoListView.as_view(), name='todo_list'),
     path('user/', UserDetailView.as_view(), name='user_detail'),
     path('priorities/', PriorityListView.as_view(), name='priority_list'),
+    path("priority/<int:pk>/", PriorityDetailView.as_view(), name="priority-detail"),
     path('categories/', CategoryListView.as_view(), name='category_list'),
+    path("category/<int:pk>/", CategoryDetailView.as_view(), name="category-detail"),
 ]

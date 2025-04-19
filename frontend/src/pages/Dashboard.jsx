@@ -67,49 +67,71 @@ const Dashboard = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {todoList.map((todo) => (
-              <div
-                key={todo.id}
-                className="bg-white hover:shadow-lg transition-shadow duration-200 rounded-xl shadow-md p-6 border border-gray-100"
-              >
-                <div className="flex justify-between items-start">
-                  <div className="w-full">
-                    <h2 className="text-xl font-semibold mb-1 break-words">
-                      {todo.title}
-                    </h2>
-                    <p className="text-sm text-gray-600 break-words">
-                      {todo.description}
-                    </p>
-                  </div>
-                </div>
+            {todoList.map(
+              (todo) => (
+                (
+                  <div
+                    key={todo.id}
+                    className="bg-white hover:shadow-lg transition-shadow duration-200 rounded-xl shadow-md p-6 border border-gray-100"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="w-full">
+                        <h2 className="text-xl font-semibold mb-1 break-words">
+                          {todo.title}
+                        </h2>
+                        <p className="text-sm text-gray-600 break-words">
+                          {todo.description}
+                        </p>
+                      </div>
+                    </div>
 
-                <div className="mt-4 space-y-1 text-sm">
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-500">Priority:</span>
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs">
-                      {todo.priority?.name || "N/A"}
-                    </span>
-                  </div>
+                    <div className="mt-4 space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-500">
+                          Priority:
+                        </span>
+                        <span
+                          className="text-white px-2 py-0.5 rounded text-xs"
+                          style={{
+                            backgroundColor: todo.priority?.color || "#808080",
+                          }}
+                        >
+                          {todo.priority?.name || "N/A"}
+                        </span>
+                      </div>
 
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-500">Category:</span>
-                    <span className="bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs">
-                      {todo.category?.name || "N/A"}
-                    </span>
-                  </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-500">
+                          Category:
+                        </span>
+                        <span
+                          className="text-white px-2 py-0.5 rounded text-xs"
+                          style={{
+                            backgroundColor: todo.category?.color || "#808080",
+                          }}
+                        >
+                          {todo.category?.name || "N/A"}
+                        </span>
+                      </div>
 
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-500">Created:</span>
-                    <span>{formatDate(todo.created_at)}</span>
-                  </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-500">
+                          Created:
+                        </span>
+                        <span>{formatDate(todo.created_at)}</span>
+                      </div>
 
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-500">Updated:</span>
-                    <span>{formatDate(todo.updated_at)}</span>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-500">
+                          Updated:
+                        </span>
+                        <span>{formatDate(todo.updated_at)}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                )
+              )
+            )}
           </div>
         )}
       </main>

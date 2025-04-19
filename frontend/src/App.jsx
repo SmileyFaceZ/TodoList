@@ -8,7 +8,7 @@ import { useAuth } from "./auth";
 import { Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import { AuthProvider } from "./auth";
-
+import TaskSettings from "./pages/TaskSettings";
 
 function App() {
   const { isAuthorized } = useAuth();
@@ -34,6 +34,7 @@ function App() {
       <Route path="/signup" element={<ProtectedRegister />} />
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
+        <Route path="/task-setting" element={<TaskSettings />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -25,13 +25,13 @@ class UserSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'color']
 
 
 class PrioritySerializer(serializers.ModelSerializer):
     class Meta:
         model = Priority
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'color']
 
 
 class TodoSerializer(serializers.ModelSerializer):
