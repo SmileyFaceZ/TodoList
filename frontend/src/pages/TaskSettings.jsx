@@ -43,9 +43,9 @@ export default function TaskSettings() {
         await api.put(`/api/${modalType}/${editId}/`, payload);
       } else {
         if (modalType === "category") {
-          await api.post(`/api/categories/`, payload); 
+          await api.post(`/api/categories/`, payload);
         } else {
-          await api.post(`/api/priorities/`, payload); 
+          await api.post(`/api/priorities/`, payload);
         }
       }
 
@@ -60,16 +60,21 @@ export default function TaskSettings() {
   };
 
   const handleDelete = async (type, id) => {
-    await api.delete(`/api/${type}s/${id}/`);
-    fetchData();
+    const confirmed = window.confirm(
+      `Are you sure you want to delete this ${type}?`
+    );
+    if (!confirmed) return;
+
+    try {
+      console.log("Deleting:", type, id);
+      await api.delete(`/api/${type}/${id}/`);
+      fetchData();
+    } catch (err) {
+      console.error("Failed to delete:", err);
+    }
   };
 
-  const openModal = (
-    type,
-    name = "",
-    id,
-    color = "#a3a3a3"
-  ) => {
+  const openModal = (type, name = "", id, color = "#a3a3a3") => {
     setModalType(type);
     setFormValue(name);
     setFormColor(color);
